@@ -14,3 +14,7 @@ git push -u origin <NEWBRANCH>
 
 <NEWBRANCH> = project name, eg. 'HW02'
 <PROJECT> = Repo name, in this case 'Sgordon4/ComS228'
+
+
+To pull into new project, 
+git clone --single-branch -b HW04 https://github.com/Sgordon4/ComS228.git
