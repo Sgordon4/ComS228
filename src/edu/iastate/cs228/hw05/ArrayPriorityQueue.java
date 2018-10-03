@@ -4,6 +4,7 @@ package edu.iastate.cs228.hw05;
  * A class of priority queues represented by an array.
  * 
  * @author
+ * Sean Gordon
  * 
  * NOTE: 
  * 0. Put your Firstname and Lastname after above author tag.
@@ -30,7 +31,7 @@ package edu.iastate.cs228.hw05;
 
 
 public class ArrayPriorityQueue<T extends Comparable<? super T>>
-		implements PriorityQueueInterface<T>
+implements PriorityQueueInterface<T>
 {
 	private T[] queue; // The contents of the priority queue
 	private int frontIndex; // The index of the current front entry
@@ -55,67 +56,91 @@ public class ArrayPriorityQueue<T extends Comparable<? super T>>
 		initialized = true;
 	}
 
-	
+
 	public void add(T newEntry)
 	{
+		if(newEntry == null)
+			throw new IllegalArgumentException();
+		
 		checkInitialization();
 		ensureCapacity();
 
-  //TODO		
+		if(frontIndex == -1) {
+			frontIndex = 0;
+			queue[0] = newEntry;
+		}
+		else {	//Can implement a version of binary search here rather than this for loop
+			int index;
+			T temp;
+			for(index = 0; index < getSize(); index++) {
+				if(newEntry.compareTo(queue[index]) < 0) {
+					temp = queue[index];
+					queue[index] = newEntry;
+					newEntry = temp;
+				}
+			}
+			queue[getSize()] = newEntry;
+			frontIndex++;
+		}
 	}
 
 	public T remove()
 	{
-  checkInitialization();
-  //TODO
-		return null;
+		checkInitialization();
+		T ret = queue[getSize() - 1];
+		queue[getSize() - 1] = null;
+		frontIndex--;
+		return ret;
 	}
 
 	public T peek()
 	{
-  checkInitialization();
-  //TODO
-		return null;
+		checkInitialization();
+		return queue[frontIndex];
 	}
 
 	/**
-  * If queue is empty returns [].
-  * Else, returns as [1, 2, 3]
-  * Important: note a comma and single space before every
-  * item except the last, and after last there is no space.
-  * In both cases before and after square brackets there
-  * is no space.
-  *    
-  */
- @Override
- public String toString()
- {
- 	//TODO
- 	return null;
- }
+	 * If queue is empty returns [].
+	 * Else, returns as [1, 2, 3]
+	 * Important: note a comma and single space before every
+	 * item except the last, and after last there is no space.
+	 * In both cases before and after square brackets there
+	 * is no space.
+	 *    
+	 */
+	@Override
+	public String toString()
+	{
+		String ret = "[";
+		for(int i = 0; i < getSize(); i++) {
+			ret += queue[i] + ", ";
+		}
+		ret = ret.substring(0, ret.length() - 2) + "]";
+		return ret;
+	}
 
-	
+
 	public boolean isEmpty()
 	{
 		return (frontIndex < 0);
 	}
 
-	public int getSize()
+	public int getSize() 
 	{
 		return frontIndex + 1;
 	}
 
 	public void clear()
 	{
-  checkInitialization();
+		checkInitialization();
 		for (int x = 0; x < queue.length; x++)
 			queue[x] = null;
 		frontIndex = -1;
 	}
 
-	
 
-	
+
+
 	// Throws an exception if this object is not initialized.
 	private void checkInitialization()
 	{
