@@ -9,7 +9,8 @@ Check 'git status' to ensure correct files
 git add .
 git commit -m 'COMMIT MESSAGE'
 
-git remote add origin https://github.com/Sgordon4/ComS228.git
+git remote add origin https://github.com/<PROJECT>.git
 git push -u origin <NEWBRANCH>
 
 <NEWBRANCH> = project name, eg. 'HW02'
+<PROJECT> = Repo name, in this case 'Sgordon4/ComS228'
