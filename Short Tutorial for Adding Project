@@ -1,0 +1,15 @@
+Open bash window inside desired project
+
+git init
+git checkout --orphan <NEWBRANCH>
+
+Copy the pre-made .gitignore or make another to only commit the src folder
+Check 'git status' to ensure correct files
+
+git add .
+git commit -m 'COMMIT MESSAGE'
+
+git remote add origin https://github.com/Sgordon4/ComS228.git
+git push -u origin <NEWBRANCH>
+
+<NEWBRANCH> = project name, eg. 'HW02'
