@@ -17,4 +17,4 @@ git push -u origin <NEWBRANCH>
 
 
 To pull into new project, 
-git clone --single-branch -b HW04 https://github.com/Sgordon4/ComS228.git
+git clone --single-branch -b <NEWBRANCH> https://github.com/<PROJECT>.git
