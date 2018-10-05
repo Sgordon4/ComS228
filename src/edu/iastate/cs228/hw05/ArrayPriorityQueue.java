@@ -121,7 +121,7 @@ implements PriorityQueueInterface<T>
 		for(int i = 0; i < getSize(); i++) {
 			ret += queue[i] + ", ";
 		}
-		//TODO substring is going out of bounds when queue is empty
+		
 		ret = ret.replaceAll(", $", "") + "]";
 		return ret;
 	}
