@@ -43,49 +43,55 @@ implements PriorityQueueInterface<T>
 		length = 0;
 	}
 
+	//I am keeping high priority items at the front of the list for easier use
 	public void add(T newEntry)
 	{
 		if(newEntry == null)
 			throw new IllegalArgumentException();
 
 		Node newNode = new Node(newEntry);
-		
-		if(length == 0) 
+
+		//If there are no existing nodes or this node is highest priority, add it to the front
+		if(firstNode == null || firstNode.getData().compareTo(newEntry) < 0) {
+			newNode.setNextNode(firstNode);
 			firstNode = newNode;
-		
+		}
+
+		//Else, iterate through the list until a node that is smaller than newEntry is found and put it there
 		else {
 			Node temp = firstNode;
-			while(temp.getNextNode() != null && 
-				  temp.getNextNode().getData().compareTo(newEntry) < 0) {
-				temp = temp.getNextNode();
+			while(temp.getNextNode() != null && 							//Is this next node null
+					temp.getNextNode().getData().compareTo(newEntry) > 0) {	//or is it smaller?
+				temp = temp.getNextNode();									//If not, select it and repeat
 			}
-			
+			//							   (or null)
+			//Stick newEntry in between the smaller node and the currently selected one
 			newNode.setNextNode(temp.getNextNode());
 			temp.setNextNode(newNode);
 		}
-		
-		length++;
+
+		length++;				//Just added a node, so length goes up
 	} 
 
+	//Highest priority nodes are at the front, so remove is easy to implement
 	public T remove()
 	{
-		if(length == 0)
+		if(firstNode == null)
 			return null;
 		
 		Node temp = firstNode;
+		firstNode = firstNode.getNextNode();
 		
-		while(temp.getNextNode() != null) {
-			//Decided here to change firstNode to node with highest
-			//priority to more efficiently work through list 
-		}
-		
-		return null;
+		return temp.getData();
 	}
 
+	//Highest priority nodes are at the front, so peek is easy to implement
 	public T peek()
 	{
-		//TODO
-		return null;
+		if(firstNode == null)
+			return null;
+		
+		return firstNode.getData();
 	}
 
 	/**
@@ -100,8 +106,14 @@ implements PriorityQueueInterface<T>
 	@Override
 	public String toString()
 	{
-		//TODO
-		return null;
+		Node temp = firstNode;
+		String ret = "]";
+		while(temp != null) {
+			ret = ", " +temp.getData() +  ret;
+			temp = temp.getNextNode();
+		}
+		ret = "[" + ret.replaceAll("^, ", "");
+		return ret;
 	}
 
 
