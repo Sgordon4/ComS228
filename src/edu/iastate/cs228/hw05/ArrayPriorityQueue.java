@@ -87,6 +87,9 @@ implements PriorityQueueInterface<T>
 	public T remove()
 	{
 		checkInitialization();
+		if(getSize() == 0)
+			return null;
+		
 		T ret = queue[getSize() - 1];
 		queue[getSize() - 1] = null;
 		frontIndex--;
@@ -96,6 +99,9 @@ implements PriorityQueueInterface<T>
 	public T peek()
 	{
 		checkInitialization();
+		if(getSize() == 0)
+			return null;
+		
 		return queue[frontIndex];
 	}
 
@@ -115,7 +121,8 @@ implements PriorityQueueInterface<T>
 		for(int i = 0; i < getSize(); i++) {
 			ret += queue[i] + ", ";
 		}
-		ret = ret.substring(0, ret.length() - 2) + "]";
+		//TODO substring is going out of bounds when queue is empty
+		ret = ret.replaceAll(", $", "") + "]";
 		return ret;
 	}
 
