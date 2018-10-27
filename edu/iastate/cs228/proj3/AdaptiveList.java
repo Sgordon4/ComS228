@@ -1,4 +1,4 @@
-package edu.iastate.coms228.proj3;
+package edu.iastate.cs228.proj3;
 
 /*
  *  @author Sean Gordon
@@ -127,7 +127,12 @@ public class AdaptiveList<E> implements List<E>
 		if ( theArray == null || theArray.length < numItems )
 			throw new RuntimeException("theArray is null or shorter");
 
-		// TODO
+		head.next = tail;				//Clear linkedList
+		tail.prev = head;
+		
+		for(E data : theArray) {
+			add(data);
+		}
 	}
 
 	@Override
@@ -145,34 +150,59 @@ public class AdaptiveList<E> implements List<E>
 	@Override
 	public boolean add(E obj)
 	{
+		add(numItems-1, obj);
+		return true;
+		
+		/*
 		ListNode newNode = new ListNode(obj);
+		
+		link(tail.prev, newNode);
+		
+		numItems++;
+		return true;
+		*/
+		/*
 		newNode.prev = tail.prev;
 		newNode.next = tail;
 		
 		tail.prev.next = newNode;
 		tail.prev = newNode;
-		
-		numItems++;
-		return true;
+		*/
 	}
 
 	@Override
 	public boolean addAll(Collection< ? extends E> c)
 	{
-		Iterator<? extends E> iterator = c.iterator();
+		addAll(numItems-1, c);
+		return true;
+		/*
+		Iterator<? extends E> iterator = c.iterator();		//Can't use this iterator nm
 		
-		while(iterator.hasNext()) {			//Default Java iterator implementation
-			add(iterator.next());
+		while(iterator.hasNext()) {			//--Default-Java-iterator-implementation--
+			add(iterator.next());			//Can't use this, for loop master race apparently idk
 		}
 		return true; 
+		*/
 	}
 
 	@Override
 	public boolean remove(Object obj)
 	{
-		// TODO
+		E IDKWhatToDoWithThis = remove(indexOf(obj));
 		return true;
+		
+		/*
+		unlink(findNode(indexOf(obj)));
+		
+		numItems--;
+		return true;
+		*/
 	}
+	
+	
+	
+	
+	
 
 	private void checkIndex(int pos) // a helper method
 	{
@@ -206,39 +236,58 @@ public class AdaptiveList<E> implements List<E>
 		checkNode(cur);
 		return cur;
 	}
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public void add(int pos, E obj)
 	{
-		// TODO
+		ListNode newNode = new ListNode(obj);
+		
+		link(findNode(pos), newNode);
+		
+		numItems++;
 	}
 
 	@Override
 	public boolean addAll(int pos, Collection< ? extends E> c)
 	{
-		// TODO
+		Iterator<? extends E> iterator = c.iterator();
+		
+		while(iterator.hasNext()) {			//Default Java iterator implementation
+			add(pos++, iterator.next());	//Add at position, then shift position over
+		}
 		return true; 
 	}
 
 	@Override
 	public E remove(int pos)
 	{
-		// TODO
-		return null; 
+		ListNode nodeToRemove = findNode(pos);
+		unlink(nodeToRemove);
+		
+		numItems--;
+		return nodeToRemove.data; 
 	}
 
 	@Override
 	public E get(int pos)
 	{
-		// TODO
-		return null; 
+		return theArray[pos]; 
 	}
 
 	@Override
 	public E set(int pos, E obj)
 	{
-		// TODO
-		return null; 
+		E temp = theArray[pos];
+		theArray[pos] = obj;
+		
+		return temp; 
 	} 
 
 	/**
@@ -252,7 +301,19 @@ public class AdaptiveList<E> implements List<E>
 	 */
 	public boolean reverse()
 	{
-		// TODO
+		if(theArray.length < 2)
+			return false;
+		
+		int left = 0;
+		int right = theArray.length-1;
+		E temp;
+		
+		while(left < right) {
+			temp 			= theArray[left];
+			theArray[left] 	= theArray[right];
+			theArray[right] = temp;
+		}
+		
 		return true;
 	}
 
@@ -268,21 +329,44 @@ public class AdaptiveList<E> implements List<E>
 	 */
 	public boolean reorderOddEven()
 	{
-		// TODO
+		if(theArray.length < 2)
+			return false;
+		
+		int pos = 0;
+		E temp;
+		
+		while(pos+1 < theArray.length) {
+			temp 			= theArray[pos];
+			theArray[pos]	= theArray[pos+1];
+			theArray[pos+1] = temp;
+		}
+		
 		return true;
 	}
 
 	@Override
 	public boolean contains(Object obj)
 	{
-		// TODO
-		return true;
+		AdaptiveListIterator iterator = new AdaptiveListIterator();
+		
+		while(iterator.hasNext()) {
+			if(iterator.next().equals(obj))
+				return true;
+		}
+		
+		return false;
 	}
 
 	@Override
 	public boolean containsAll(Collection< ? > c)
 	{
-		// TODO
+		Iterator<?> iterator = c.iterator();
+		
+		while(iterator.hasNext()) {
+			if(!contains(iterator.next()))
+				return false;
+		}
+		
 		return true; 
 	}
 
@@ -290,28 +374,54 @@ public class AdaptiveList<E> implements List<E>
 	@Override
 	public int indexOf(Object obj)
 	{
-		// TODO
-		return -1; 
+		AdaptiveListIterator iterator = new AdaptiveListIterator();
+		
+		while(iterator.hasNext()) {
+			if(iterator.next().equals(obj))
+				break;
+		}
+		return iterator.previousIndex(); 
 	}
 
 	@Override
 	public int lastIndexOf(Object obj)
 	{
-		// TODO
-		return -1; 
+		AdaptiveListIterator iterator = new AdaptiveListIterator();
+		
+		while(iterator.hasNext()) {
+			if(iterator.next().equals(obj))
+				break;
+		}
+		return iterator.previousIndex(); 
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c)
 	{
-		// TODO
+		AdaptiveListIterator iterator = new AdaptiveListIterator();
+		E temp;
+		
+		while(iterator.hasNext()) {
+			temp = iterator.next();
+			if(c.contains(temp))
+				remove(temp);
+		}
+		
 		return true; 
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c)
 	{
-		// TODO
+		AdaptiveListIterator iterator = new AdaptiveListIterator();
+		E temp;
+		
+		while(iterator.hasNext()) {
+			temp = iterator.next();
+			if(!c.contains(temp))
+				remove(temp);
+		}
+		
 		return true; 
 	}
 
