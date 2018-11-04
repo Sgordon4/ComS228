@@ -47,29 +47,30 @@ import java.util.Objects;
  *     (c) Inorder
  *     (d) Level order
  *     
- * A3. (a)
- *     (b)
- *     (c)
- *     (d)
+ * A3. (a)6 4 2 1 3 5 8 7 9 10 11
+ *     (b)1 3 2 5 4 9 7 11 10 8 6
+ *     (c)1 2 3 4 5 6 7 9 8 10 11
+ *     (d)6 4 8 2 5 7 10 1 3 9 11
  *     
  * =========================================================================
  * Q4. Repeat Q3 but for the binary tree shwn in Figure 2. 
- * A4. (a)
- *     (b)
- *     (c)
- *     (d)
+ * A4. (a)11 8 3 2 1 5 4 6 10 9 7
+ *     (b)2 1 3 4 6 5 8 9 7 10 11
+ *     (c)2 3 1 8 4 5 6 11 9 10 7
+ *     (d)11 8 10 3 5 9 7 2 1 4 6
  *  
  * =========================================================================
  * Q5. The two binary trees shown in Figures 1 and 2 contain Integer data.
  *     (a) Is the tree in Figure 1 a binary search tree? Why or why not?
  *     (b) Is the tree in Figure 2 a maxheap? Why or why not?
  *  
- * A5. (a)
- *     (b)
+ * A5. (a)No, some nodes have larger values to their left, or smaller ones to their right
+ *     (b)No, there is a value of 6 underneath a value of 5
  *     
  * =========================================================================
  * Q6. Can a binary search tree ever be a maxheap? Explain.
- * A6.                           
+ * A6. No, as long as there are two or more nodes in the tree, one node must have a
+ *      greater child node due to the sorted nature of a binary search tree
  *     
  *     
  *     
@@ -113,18 +114,25 @@ public class LinkedDictionary<K, V> implements DictionaryInterface<K, V>
 		Node nextNode = firstNode;
 		V val = null;
 		
-		if(nextNode.getKey() == key) {
+		if(key.equals(firstNode.getKey())) {		//Special case for firstNode
 			val = firstNode.getValue();
 			firstNode = firstNode.getNextNode();
 		}
 		
-		for(int i = 0; i < getSize()-1; i++) {
-			if(nextNode.getNextNode().getKey() == key) {
+		System.out.println();
+		while(nextNode.getNextNode() != null) {
+			System.out.println(nextNode.getNextNode().getKey());
+			if(key.equals(nextNode.getNextNode().getKey())) {
 				val = nextNode.getNextNode().getValue();
 				nextNode.setNextNode(nextNode.getNextNode().getNextNode());
+				break;
 			}
+			
+			nextNode = nextNode.getNextNode();
 		}
 		
+		if(val != null)
+			numberOfEntries--;
 		return val;
 	}
 
@@ -136,7 +144,7 @@ public class LinkedDictionary<K, V> implements DictionaryInterface<K, V>
 		Node nextNode = firstNode;
 		
 		while(nextNode != null) {
-			if(nextNode.getKey() == key)
+			if(key.equals(nextNode.getKey()))
 				return nextNode.getValue();
 			
 			nextNode = nextNode.getNextNode();
@@ -153,7 +161,7 @@ public class LinkedDictionary<K, V> implements DictionaryInterface<K, V>
 		Iterator<K> iterator = getKeyIterator();
 		
 		while(iterator.hasNext()) {
-			if(iterator.next() == key)
+			if(key.equals(iterator.next()))
 				return true;
 		}
 
@@ -180,8 +188,16 @@ public class LinkedDictionary<K, V> implements DictionaryInterface<K, V>
 	// format as the one done by SortedVectorDictionary.
 	public String toString()
 	{
-		// TODO  
-		return "";
+		String ret = "[";
+		Node temp = firstNode;
+		
+		while(temp != null) {
+			ret += "("+temp.getKey()+":"+temp.getValue()+"), ";
+			temp = temp.getNextNode();
+		}
+		
+		ret = ret.replaceAll(", $", "") + "]"; 
+		return ret;
 	}
 
 	public Iterator<K> getKeyIterator()
@@ -205,13 +221,16 @@ public class LinkedDictionary<K, V> implements DictionaryInterface<K, V>
 
 		public boolean hasNext() 
 		{
-			return (nextNode.getNextNode() != null);
+			return (nextNode != null);
 		}
 
 		public K next()
 		{
+			if(!hasNext())
+				throw new NoSuchElementException();
+			
 			K temp = nextNode.getKey();
-			nextNode.setNextNode(nextNode.getNextNode());
+			nextNode = nextNode.getNextNode();
 			return temp;
 		}
 	} 
@@ -227,13 +246,16 @@ public class LinkedDictionary<K, V> implements DictionaryInterface<K, V>
 
 		public boolean hasNext() 
 		{
-			return (nextNode.getNextNode() != null);
+			return (nextNode != null);
 		}
 
 		public V next()
 		{
+			if(!hasNext())
+				throw new NoSuchElementException();
+			
 			V temp = nextNode.getValue();
-			nextNode.setNextNode(nextNode.getNextNode());
+			nextNode = nextNode.getNextNode();
 			return temp;
 		}
 	}

@@ -78,12 +78,11 @@ implements DictionaryInterface<K, V>
 				return dict.set(i, entry).getValue();			//Replace with new object
 			
 			if(key.compareTo(dict.get(i).getKey()) < 0) {		//If this key is now smaller...
-				i--;
 				break;											//You have found correct index
 			}
 		}
 		
-		dict.add(i+1, entry);									//Add at the next space,
+		dict.add(i, entry);									//Add at the next space,
 																//i+1 is there if at end
 		return val;
 	}
@@ -175,6 +174,9 @@ implements DictionaryInterface<K, V>
 
 		public K next()
 		{
+			if(!hasNext())
+				throw new NoSuchElementException();
+			
 			return iter.next().getKey();
 		}
 	} 
@@ -195,6 +197,9 @@ implements DictionaryInterface<K, V>
 
 		public V next()
 		{
+			if(!hasNext())
+				throw new NoSuchElementException();
+			
 			return iter.next().getValue();
 		}
 	}
