@@ -27,16 +27,16 @@ import java.util.Objects;
  * Q1. (a) What is the height of the shortest binary tree that contains 22
  *     nodes? (b) Is this tree full? (c) Is it balanced?
  *     
- * A1. (a)
- *     (b)
- *     (c)
+ * A1. (a)5
+ *     (b)No
+ *     (c)Yes
  * =========================================================================
  * Q2. Consider a binary tree that has four levels.
  *     (a) What is the maximum number of nodes in this tree?
  *     (b) What is the maximum number of leaves in this tree?
  *     
- * A2. (a)
- *     (b)    
+ * A2. (a)15
+ *     (b)8
  * =========================================================================
  * Q3. Consider a traversal of a binary tree, which contains Integer data. 
  *     Suppose that visiting a node means to simply display the data in the 
