@@ -3,9 +3,9 @@ Collection of IA State ComS 228 assigned homeworks and projects
 
 **Currently contains:**
 
-+ HW 1-8
++ HW 1-10
 
-+ Projects 1-3
++ Projects 1-5
 
-+ Shell of Project 4
+**This code is not guaranteed to be correct, and much of it contains bugs**
 
